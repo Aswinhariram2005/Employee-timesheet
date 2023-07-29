@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class Main {
+
+    // success if you see this
     private  static Scanner scanner = new Scanner(System.in);
     private static Statement statement;
     private static Connection conn;
