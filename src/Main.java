@@ -21,8 +21,10 @@ public class Main {
         int choice = scanner.nextInt();
         switch (choice){
             case 1:
+
                 Admin admin = new Admin();
-                admin._showMenu();
+                admin._connDB();
+                admin._showMenu("main");
 
                 break;
             case 2:
