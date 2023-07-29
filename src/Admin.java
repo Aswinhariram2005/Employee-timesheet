@@ -5,12 +5,12 @@ public class Admin {
     private Scanner scanner = new Scanner(System.in);
     private String emp_name, emp_department, emp_password, c_password, emp_ph, emp_id;
     private Statement statement;
-    private Connection conn;
     private  Admin_interface admin_interface;
 
 
-    public Admin(Admin_interface admin_interface) {
+    public Admin(Statement statement,Admin_interface admin_interface) {
         this.admin_interface = admin_interface;
+        this.statement = statement;
     }
 
     public void _showMenu(String menu) {
@@ -39,19 +39,7 @@ public class Admin {
         }
     }
 
-    public void _connDB() {
-        String
-                DB_URL = "jdbc:mysql://localhost:3307/empdb";
 
-
-        try {
-            conn = DriverManager.getConnection(DB_URL, "root", "aswin123");
-            statement = conn.createStatement();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 
     public void _decider(String decider) {
         System.out.print("Enter you option : ");
