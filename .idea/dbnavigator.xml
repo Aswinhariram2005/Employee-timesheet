@@ -13,7 +13,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="3e53420c-772f-4772-90d4-b099bc792176">
-      <console name="empDB" type="STANDARD" schema="mysql" session="Main"><![CDATA[select  *  from empdb.emp_details ;]]></console>
+      <console name="empDB" type="STANDARD" schema="mysql" session="Main"><![CDATA[update empdb.timesheet set emp_out = '20:23 PM' , total_hrs = '5' where emp_id = 7 and `date` = '29/07/2023';]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
