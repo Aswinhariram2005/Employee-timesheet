@@ -5,12 +5,16 @@ public class Main {
 
     public static void main(String[] args) {
 
+       _show_userMenu();
+    }
+
+    private static void _show_userMenu() {
+        System.out.println();
         System.out.println("Welcome to ...  Management");
         System.out.println("1.Admin");
         System.out.println("2.Manager");
         System.out.println("3.Employee");
-
-
+        System.out.println();
         _Main();
 
     }
@@ -22,7 +26,12 @@ public class Main {
         switch (choice){
             case 1:
 
-                Admin admin = new Admin();
+                Admin admin = new Admin(new Admin.Admin_interface() {
+                    @Override
+                    public void _Logout_main() {
+                        _show_userMenu();
+                    }
+                });
                 admin._connDB();
                 admin._showMenu("main");
 

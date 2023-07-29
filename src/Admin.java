@@ -6,6 +6,12 @@ public class Admin {
     private String emp_name, emp_department, emp_password, c_password, emp_ph, emp_id;
     private Statement statement;
     private Connection conn;
+    private  Admin_interface admin_interface;
+
+
+    public Admin(Admin_interface admin_interface) {
+        this.admin_interface = admin_interface;
+    }
 
     public void _showMenu(String menu) {
 
@@ -62,14 +68,25 @@ public class Admin {
                     System.out.print("Enter Employee id : ");
                     emp_id = scanner.nextLine();
                     System.out.println();
-
-                    _showMenu("update_emp");
+                    if (_check_emp(emp_id)) {
+                        _showMenu("update_emp");
+                    }
                     break;
                 case 3:
-                    //TODO REMOVE
+                    // REMOVE
+                    scanner.nextLine();
+                    System.out.print("Enter Employee id : ");
+                    emp_id = scanner.nextLine();
+                    System.out.println();
+
+
+                    if (_check_emp(emp_id)) {
+                        String remove_query = "delete from empdb.emp_details where emp_id = '"+emp_id+"';";
+                        _update_emp(remove_query);
+                    }
                     break;
                 case 4:
-                    //TODO LOGOUT
+                    admin_interface._Logout_main();
                     break;
                 default:
                     System.out.println("Enter valid choice...");
@@ -118,11 +135,43 @@ public class Admin {
         }
     }
 
+    private boolean _check_emp(String emp_id) {
+
+        try {
+            ResultSet set = statement.executeQuery("select  *  from empdb.emp_details  where emp_id='"+emp_id+ "';");
+            if (!set.next()){
+                System.out.println("Employee not found...");
+                _showMenu("main");
+                return false;
+            }
+            else {
+                while (set.next()){
+                    emp_name = set.getString("emp_name");
+                    emp_department = set.getString("emp_dept");
+                    emp_password = set.getString("emp_password");
+                    emp_ph = set.getString("emp_ph");
+                }
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
     private void _update_emp(String upd_query) {
         try {
             statement.executeUpdate(upd_query);
-            System.out.println("Update Successful...");
-            _showMenu("update_emp");
+
+            if (upd_query.contains("UPDATE")) {
+                System.out.println("Update Successful...");
+                _showMenu("update_emp");
+            } else if (upd_query.contains("delete")) {
+                System.out.println("Removed Employee Successfully.... ");
+                _showMenu("main");
+            }
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -206,4 +255,8 @@ public class Admin {
             System.out.println(e);
         }
     }
+
+   interface Admin_interface{
+        void _Logout_main();
+   }
 }
