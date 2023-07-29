@@ -1,21 +1,37 @@
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 
 public class Admin {
     private Scanner scanner = new Scanner(System.in);
-    private String emp_name, emp_department;
+    private String emp_name, emp_department, emp_password, c_password,emp_ph,emp_id;
+    private Statement statement;
+    private Connection conn;
 
     public void _showMenu() {
+
+        _connDB();
+
+
         System.out.println("Welcome to Admin page");
         System.out.println("1. Add new Employee");
         System.out.println("2. Update Existing Employee");
         System.out.println("3. Remove Employee");
         System.out.println("4. Logout");
         _decider();
+    }
+
+    private void _connDB() {
+        String
+                DB_URL = "jdbc:mysql://localhost:3307/empdb";
+
+
+        try {
+            conn = DriverManager.getConnection(DB_URL, "root", "aswin123");
+            statement = conn.createStatement();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public void _decider() {
@@ -43,31 +59,70 @@ public class Admin {
 
     public void _create_employee() {
         scanner.nextLine();
+
+
         System.out.println("Create Employee");
-        System.out.print("Enter Employee Name : ");
+
+        System.out.print("Enter Employee Name :  ");
         emp_name = scanner.nextLine();
-        System.out.print("Enter Employee Department : ");
+
+        System.out.print("Enter Employee Department :  ");
         emp_department = scanner.nextLine();
 
-        _saveDB();
+        System.out.print("Enter Employee Phone Number :  ");
+        emp_ph = scanner.nextLine();
 
+        _validate();
+
+
+
+
+    }
+
+    private void _validate() {
+
+        System.out.print("Create Password : ");
+        emp_password = scanner.nextLine();
+
+        System.out.print("Confirm Password : ");
+        c_password = scanner.nextLine();
+
+        if (emp_password.equals(c_password)) {
+            _saveDB();
+        } else {
+            System.out.println("Confirm password mismatch...");
+            _validate();
+        }
     }
 
     public void _saveDB() {
 
-        String
-                DB_URL = "jdbc:mysql://localhost:3307/empdb";
 
         try {
-           Connection conn = DriverManager.getConnection(DB_URL,"root","aswin123");
-             Statement statement = conn.createStatement();
-             String query ="INSERT INTO `empdb`.`emp_details` (`emp_name`, `emp_dept`) VALUES ( '"+emp_name+"' , '" +emp_department+"' );";
-            statement.executeUpdate(query);
-            System.out.println("Record is inserted in the table successfully..................");
+            String insert_query = "INSERT INTO `empdb`.`emp_details` (`emp_name`, `emp_dept`,`emp_ph`,`emp_password`) VALUES ( '"  + emp_name + "'  , '"  + emp_department + "','"+emp_ph+ "','"+emp_password+"');";
 
+            statement.executeUpdate(insert_query);
+
+            System.out.println("Employee added successfully..................");
+
+            _get_emp_id();
 
 
         } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private void _get_emp_id() {
+        try{
+            String id_query = "select emp_id from emp_details where emp_ph='"+emp_ph+""+"';";
+            ResultSet set = statement.executeQuery(id_query);
+            while (set.next()){
+                emp_id = set.getString("emp_id");
+                System.out.println("Your Employee ID is : "+emp_id);
+            }
+        }
+        catch (Exception e){
             System.out.println(e);
         }
     }
