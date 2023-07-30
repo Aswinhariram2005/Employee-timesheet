@@ -1,11 +1,18 @@
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Admin {
     private Scanner scanner = new Scanner(System.in);
-    private String emp_name, emp_department, emp_password, c_password, emp_ph, emp_id;
+    private String emp_name, emp_department, emp_password, c_password, emp_ph, emp_id,emp_salary;
     private Statement statement;
     private  Admin_interface admin_interface;
+    String today,day,time;
 
 
     public Admin(Statement statement,Admin_interface admin_interface) {
@@ -15,6 +22,8 @@ public class Admin {
 
     public void _showMenu(String menu) {
 
+        _date();
+        _update_day1();
 
         if (menu.equals("main")) {
             System.out.println();
@@ -44,6 +53,31 @@ public class Admin {
         }
     }
 
+    private void _update_day1() {
+        String date = today.substring(0,2);
+        if (date.equals("01")){
+
+            String day1_query = "update emp_details set leave_permit = 3 , leave_update = '"+today+"' where leave_update != '"+today+"' ;";
+            try {
+                statement.executeUpdate(day1_query);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+
+    }
+    private void _date() {
+        java.util.Date date = new Date();
+        SimpleDateFormat date_formatter = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat time_formatter = new SimpleDateFormat("HH:mm aa");
+        LocalDate local_day = LocalDate.now();
+        DayOfWeek dayOfWeek = local_day.getDayOfWeek();
+
+
+        today = date_formatter.format(date);
+        time = time_formatter.format(date);
+        day = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault());
+    }
 
 
     public void _decider(String decider) {
@@ -80,7 +114,7 @@ public class Admin {
                     }
                     break;
                 case 4:
-                    // TODO VIEW
+                    //  VIEW
                     scanner.nextLine();
                     System.out.print("Enter Employee id : ");
                     emp_id = scanner.nextLine();
@@ -222,6 +256,9 @@ public class Admin {
         System.out.print("Enter Employee Phone Number :  ");
         emp_ph = scanner.nextLine();
 
+        System.out.print("Enter Salary Per Hour :  ");
+        emp_salary = scanner.nextLine();
+
         System.out.println("======================================================");
         System.out.println();
         _validate("save");
@@ -258,7 +295,8 @@ public class Admin {
 
 
         try {
-            String insert_query = "INSERT INTO `empdb`.`emp_details` (`emp_name`, `emp_dept`,`emp_ph`,`emp_password`) VALUES ( '" + emp_name + "'  , '" + emp_department + "','" + emp_ph + "','" + emp_password + "');";
+            String insert_query = "INSERT INTO `empdb`.`emp_details` (emp_name, emp_dept,emp_ph,emp_password,leave_permit,leave_update,hrs_worked,salary_hrs,total_salary) " + "" +
+                    " VALUES ( '" + emp_name + "'  , '" + emp_department + "','" + emp_ph + "','" + emp_password + "' , '3', '"+today+"' , '0', '" +emp_salary+"','0' );";
 
             statement.executeUpdate(insert_query);
 

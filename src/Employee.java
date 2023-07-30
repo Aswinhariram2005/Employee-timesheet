@@ -17,11 +17,13 @@ public class Employee {
     private String emp_id, emp_password;
     private Statement statement;
     private Employee_interface employee_interface;
+    private String day, today, time;
+    private String work;
 
     public Employee(Statement statement, Employee_interface employee_interface) {
         this.statement = statement;
         this.employee_interface = employee_interface;
-
+        _date();
         System.out.println();
         System.out.println("Welcome to Employee page");
         System.out.println("======================================================");
@@ -40,20 +42,19 @@ public class Employee {
             System.out.print("Enter Employee Password :  ");
             emp_password = scanner.nextLine();
 
-            _check_Emp();
-        }
-        else if (menu.equals("timesheet")) {
+            _check_Emp("details");
+        } else if (menu.equals("timesheet")) {
             System.out.println();
             System.out.println("Employee Menu");
             System.out.println("======================================================");
             System.out.println("1. Attendence");
-            System.out.println("2. Apply for leave");
-            System.out.println("3. Request Salary");
-            System.out.println("4. Logout");
+            System.out.println("2. Apply for Leave");
+            System.out.println("3. Check Leave Application Status");
+            System.out.println("4. Request Salary");
+            System.out.println("5. Logout");
             System.out.println("======================================================");
             _decider("timesheet");
-        }
-        else if (menu.equals("attendence")) {
+        } else if (menu.equals("attendence")) {
             System.out.println();
             System.out.println("TimeSheet Menu");
             System.out.println("======================================================");
@@ -76,13 +77,20 @@ public class Employee {
                     _show_EmpMenu("attendence");
                     break;
                 case 2:
-                    //TODO APPLY LEAVE
+                    // APPLY LEAVE
+                    _check_Emp("leave");
+
                     break;
                 case 3:
-                    //TODO REQ SALARY
+                    // APPLY LEAVE
+                    _check_status();
+
                     break;
                 case 4:
-                    //TODO LOGOUT
+                    // REQ SALARY
+                    break;
+                case 5:
+                    //TODO EXIT
                     break;
                 default:
                     System.out.println("Enter valid option...");
@@ -91,16 +99,7 @@ public class Employee {
             }
         } else if (menu.equals("attendence")) {
 
-            Date date = new Date();
-            SimpleDateFormat date_formatter = new SimpleDateFormat("dd/MM/yyyy");
-            SimpleDateFormat time_formatter = new SimpleDateFormat("HH:mm aa");
-            LocalDate local_day = LocalDate.now();
-            DayOfWeek dayOfWeek = local_day.getDayOfWeek();
-
-
-            String today = date_formatter.format(date);
-            String time = time_formatter.format(date);
-            String day = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault());
+            _date();
 
 
             switch (opt) {
@@ -155,7 +154,7 @@ public class Employee {
 
                                 long hours = duration.toHours();
                                 long minutes = duration.toMinutesPart();
-                                String work;
+
                                 if (minutes >= 30) {
                                     work = String.valueOf(hours) + ".5";
                                 } else {
@@ -163,7 +162,7 @@ public class Employee {
                                 }
 
                                 System.out.println();
-                                System.out.println("You worked for " + work+" hours");
+                                System.out.println("You worked for " + work + " hours");
 
 
                                 String out_query = "update empdb.timesheet set emp_out = '" + time + "' ,  total_hrs = '" + work + "' where emp_id = '" + emp_id + "' and `date` = '" + today + "' ;";
@@ -177,10 +176,11 @@ public class Employee {
                     } catch (Exception e) {
                         System.out.println(e);
                     }
-
                     break;
                 case 3:
-                    //TODO EXIT
+                    // EXIT
+                    _show_EmpMenu("timesheet");
+                    break;
                 default:
                     System.out.println();
                     System.out.println("Enter valid option...");
@@ -189,6 +189,37 @@ public class Employee {
         }
 
 
+    }
+
+    private void _check_status() {
+        String leave_check_query = "select * from leavesheet where emp_id = '" + emp_id + "' and app_date+ '" + today + "' ;";
+        try {
+            ResultSet set = statement.executeQuery(leave_check_query);
+            if (!set.next()){
+                System.out.println("Leave not yet applied...");
+
+            }
+            else {
+                String status = set.getString("status");
+                System.out.println("Leave Status : "+status);
+            }
+            _show_EmpMenu("timesheet");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private void _date() {
+        Date date = new Date();
+        SimpleDateFormat date_formatter = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat time_formatter = new SimpleDateFormat("HH:mm aa");
+        LocalDate local_day = LocalDate.now();
+        DayOfWeek dayOfWeek = local_day.getDayOfWeek();
+
+
+        today = date_formatter.format(date);
+        time = time_formatter.format(date);
+        day = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault());
     }
 
     private void _exe_query(String query) {
@@ -204,6 +235,7 @@ public class Employee {
             try {
                 statement.executeUpdate(query);
                 System.out.println("Attendence Out time updated successfully...");
+                _update_salary();
                 _show_EmpMenu("timesheet");
             } catch (Exception e) {
                 System.out.println(e);
@@ -211,23 +243,87 @@ public class Employee {
         }
     }
 
-    private void _check_Emp() {
+    private void _update_salary() {
+        String sal_hrs_query  = "select salary_hrs from emp_details where emp_id = '"+emp_id+"' ;";
         try {
-            ResultSet set = statement.executeQuery("select  *  from empdb.emp_details  where emp_id='" + emp_id + "' and emp_password='" + emp_password + "';");
-            if (set.next()) {
-
-                // LOGIN SUCCESSFUL
-                _show_EmpMenu("timesheet");
-            } else {
-                // LOGIN FAILED
-                System.out.println("Employee Not Found");
-                employee_interface.logout();
+            ResultSet set = statement.executeQuery(sal_hrs_query);
+            if (set.next()){
+                int sal_hrs = Integer.parseInt(set.getString("salary_hrs"));
+                int salary = Integer.parseInt(work) * sal_hrs;
+                System.out.println("salary Earned Today = "+salary);
+                String sal_query = "update emp_details set hrs_worked = '"+work+"' ,total_salary= '"+String.valueOf(salary)+"' ;";
+                statement.executeUpdate(sal_query);
+                System.out.println("Salary Added Successfully");
 
             }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.out.println(e);
         }
+
+
+    }
+
+    private void _check_Emp(String ch) {
+        if (ch.equals("details")) {
+            try {
+                ResultSet set = statement.executeQuery("select  *  from empdb.emp_details  where emp_id='" + emp_id + "' and emp_password='" + emp_password + "';");
+                if (set.next()) {
+
+                    // LOGIN SUCCESSFUL
+                    _show_EmpMenu("timesheet");
+                } else {
+                    // LOGIN FAILED
+                    System.out.println("Employee Not Found");
+                    employee_interface.logout();
+
+                }
+
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else if (ch.equals("leave")) {
+            String ch_query = "select * from empdb.timesheet where emp_id= '" + emp_id + "' and date= '" + today + "' ;";
+            try {
+                ResultSet set = statement.executeQuery(ch_query);
+                if (!set.next()) {
+                    // CHECK ARRIVED OR NOT
+                    String leave_check_query = "select * from leavesheet where emp_id = '" + emp_id + "' and app_date+ '" + today + "' ;";
+                    ResultSet set1 = statement.executeQuery(leave_check_query);
+                    if (!set1.next()) {
+                        // APPLY LEAVE
+                        _applyLeave();
+                    } else {
+                        // DISPLAY LEAVE STATUS
+                        System.out.println("Leave already applied...");
+                        _show_EmpMenu("timesheet");
+                    }
+                } else {
+                    System.out.println("Employee already arrived...");
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+
+        }
+    }
+
+    private void _applyLeave() {
+        System.out.println();
+        scanner.nextLine();
+
+        System.out.print("Enter Reason : ");
+        String reason = scanner.nextLine();
+
+        String leave_query = "insert into leavesheet(emp_id,app_date,app_day,reason,status) values ( '" + emp_id + "' ,'" + today + "','" + day + "','" + reason + "','pending' );";
+        try {
+            statement.executeUpdate(leave_query);
+            System.out.println("Leave Application Successfully applied....");
+            _show_EmpMenu("timesheet");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
     }
 
     interface Employee_interface {
