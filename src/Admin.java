@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class Admin {
     private Scanner scanner = new Scanner(System.in);
-    private String emp_name, emp_department, emp_password, c_password, emp_ph, emp_id,emp_salary;
+    private String emp_name, emp_department, emp_password, c_password, emp_ph, emp_id,emp_salary,salary_hrs,total_salary,leave_permit,hrs_worked;
     private Statement statement;
     private  Admin_interface admin_interface;
     String today,day,time;
@@ -29,6 +29,7 @@ public class Admin {
             System.out.println();
             System.out.println("Welcome to Admin page");
             System.out.println("======================================================");
+            System.out.println("\t\t\tAdmin Menu...");
             System.out.println("1. Add new Employee");
             System.out.println("2. Update Existing Employee");
             System.out.println("3. Remove Employee");
@@ -39,8 +40,9 @@ public class Admin {
             _decider("main");
         } else if (menu.equals("update_emp")) {
             System.out.println();
-            System.out.println("Update Employee Details");
+
             System.out.println("======================================================");
+            System.out.println("Update Employee Details");
             System.out.println("1. Employee Name");
             System.out.println("2. Employee Department");
             System.out.println("3. Employee Phone Number");
@@ -184,6 +186,10 @@ public class Admin {
                 emp_department = set.getString("emp_dept");
                 emp_password = set.getString("emp_password");
                 emp_ph = set.getString("emp_ph");
+                salary_hrs = set.getString("salary_hrs");
+                total_salary = set.getString("total_salary");
+                leave_permit = set.getString("leave_permit");
+                hrs_worked = set.getString("hrs_worked");
             }
         }
         catch (Exception e)
@@ -198,6 +204,10 @@ public class Admin {
         System.out.println("Employee Department :  "+emp_department);
         System.out.println("Employee Phone Number :  "+emp_ph);
         System.out.println("Employee Password :  "+emp_password);
+        System.out.println("Employee Leave Days Limit :  "+leave_permit);
+        System.out.println("Employee Salary Per Hour :  "+salary_hrs);
+        System.out.println("Employee Worked : "+ hrs_worked+" hours");
+        System.out.println("Employee Total Salary :  "+total_salary  );
         System.out.println("=======================================================");
         _showMenu("main");
     }
@@ -226,7 +236,6 @@ public class Admin {
             statement.executeUpdate(upd_query);
 
             if (upd_query.contains("UPDATE")) {
-                System.out.println();
                 System.out.println("Update Successful...");
                 _showMenu("update_emp");
             } else if (upd_query.contains("delete")) {
@@ -245,8 +254,9 @@ public class Admin {
         scanner.nextLine();
 
 
-        System.out.println("Create Employee");
+
         System.out.println("======================================================");
+        System.out.println("\t\t\tCreate Employee...");
         System.out.print("Enter Employee Name :  ");
         emp_name = scanner.nextLine();
 
@@ -258,9 +268,6 @@ public class Admin {
 
         System.out.print("Enter Salary Per Hour :  ");
         emp_salary = scanner.nextLine();
-
-        System.out.println("======================================================");
-        System.out.println();
         _validate("save");
 
 
@@ -273,7 +280,8 @@ public class Admin {
 
         System.out.print("Confirm Password : ");
         c_password = scanner.nextLine();
-
+        System.out.println("======================================================");
+        System.out.println();
         if (emp_password.equals(c_password) && menu.equals("save")) {
             _saveDB();
         }

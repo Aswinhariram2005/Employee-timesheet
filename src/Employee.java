@@ -26,7 +26,6 @@ public class Employee {
         _date();
         System.out.println();
         System.out.println("Welcome to Employee page");
-        System.out.println("======================================================");
         System.out.println();
 
         _show_EmpMenu("main");
@@ -35,8 +34,9 @@ public class Employee {
 
     private void _show_EmpMenu(String menu) {
         if (menu.equals("main")) {
-            System.out.println("\t\t LOGIN ");
+
             System.out.println("======================================================");
+            System.out.println("\t\t\t\tLOGIN ");
             System.out.print("Enter  Employee ID  :  ");
             emp_id = scanner.nextLine();
             System.out.print("Enter Employee Password :  ");
@@ -45,8 +45,8 @@ public class Employee {
             _check_Emp("details");
         } else if (menu.equals("timesheet")) {
             System.out.println();
-            System.out.println("Employee Menu");
             System.out.println("======================================================");
+            System.out.println("\t\t\tEmployee Menu...");
             System.out.println("1. Attendence");
             System.out.println("2. Apply for Leave");
             System.out.println("3. Check Leave Application Status");
@@ -299,6 +299,7 @@ public class Employee {
                     }
                 } else {
                     System.out.println("Employee already arrived...");
+                    _show_EmpMenu("timesheet");
                 }
             } catch (Exception e) {
                 System.out.println(e);

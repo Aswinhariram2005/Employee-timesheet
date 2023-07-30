@@ -12,18 +12,22 @@ public class Main {
     private static Connection conn;
 
     public static void main(String[] args) {
-
+        System.out.println();
+        System.out.println();
+        System.out.println("Welcome to Employee TimeSheet Application");
+        System.out.println();
        _show_userMenu();
     }
 
     private static void _show_userMenu() {
-        System.out.println();
-        System.out.println("Welcome to Employee TimeSheet Application");
+
         System.out.println("======================================================");
+        System.out.println("\t\t\t Choose User...");
         System.out.println("1.Admin");
         System.out.println("2.Manager");
         System.out.println("3.Employee");
         System.out.println("======================================================");
+        System.out.println();
         _Main();
 
     }
@@ -70,11 +74,11 @@ public class Main {
 
     private static void _connDB() {
         String
-                DB_URL = "jdbc:mysql://localhost:3307/empdb";
+                DB_URL = "jdbc:mysql://localhost:3306/empdb";
 
 
         try {
-            conn = DriverManager.getConnection(DB_URL, "root", "aswin123");
+            conn = DriverManager.getConnection(DB_URL, "root", "Akshaya@2003");
             statement = conn.createStatement();
         } catch (SQLException e) {
             throw new RuntimeException(e);
