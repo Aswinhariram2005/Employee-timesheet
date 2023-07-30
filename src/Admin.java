@@ -18,6 +18,7 @@ public class Admin {
     public Admin(Statement statement,Admin_interface admin_interface) {
         this.admin_interface = admin_interface;
         this.statement = statement;
+        _showMenu("main");
     }
 
     public void _showMenu(String menu) {

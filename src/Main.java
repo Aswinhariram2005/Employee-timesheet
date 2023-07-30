@@ -46,11 +46,17 @@ public class Main {
                     }
                 });
 
-                admin._showMenu("main");
+
 
                 break;
             case 2:
-                //TODO MANAGER
+                // MANAGER
+                Manager manager = new Manager(statement, new Manager.Manager_interface() {
+                    @Override
+                    public void logout() {
+                        _show_userMenu();
+                    }
+                });
                 break;
             case 3:
                 // EMPLOYEE
