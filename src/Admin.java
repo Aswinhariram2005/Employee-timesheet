@@ -19,20 +19,25 @@ public class Admin {
         if (menu.equals("main")) {
             System.out.println();
             System.out.println("Welcome to Admin page");
+            System.out.println("======================================================");
             System.out.println("1. Add new Employee");
             System.out.println("2. Update Existing Employee");
             System.out.println("3. Remove Employee");
-            System.out.println("4. Logout");
+            System.out.println("4. View Employee Details");
+            System.out.println("5. Logout");
+            System.out.println("======================================================");
             System.out.println();
             _decider("main");
         } else if (menu.equals("update_emp")) {
             System.out.println();
-            System.out.println("Update menu");
+            System.out.println("Update Employee Details");
+            System.out.println("======================================================");
             System.out.println("1. Employee Name");
             System.out.println("2. Employee Department");
             System.out.println("3. Employee Phone Number");
             System.out.println("4. Employee Password");
-            System.out.println("5.Cancel update");
+            System.out.println("5. Cancel Update");
+            System.out.println("======================================================");
             System.out.println();
 
             _decider("update_emp");
@@ -44,6 +49,7 @@ public class Admin {
     public void _decider(String decider) {
         System.out.print("Enter you option : ");
         int choice = scanner.nextInt();
+        System.out.println();
         if (decider.equals("main")) {
             switch (choice) {
                 case 1:
@@ -74,6 +80,18 @@ public class Admin {
                     }
                     break;
                 case 4:
+                    // TODO VIEW
+                    scanner.nextLine();
+                    System.out.print("Enter Employee id : ");
+                    emp_id = scanner.nextLine();
+                    System.out.println();
+
+
+                    if (_check_emp(emp_id)) {
+                       _view_emp(emp_id);
+                    }
+                    break;
+                case 5:
                     admin_interface._Logout_main();
                     break;
                 default:
@@ -123,6 +141,33 @@ public class Admin {
         }
     }
 
+    private void _view_emp(String empId) {
+        System.out.println();
+        try {
+            ResultSet set = statement.executeQuery("select  *  from empdb.emp_details  where emp_id='" + emp_id + "';");
+            while (set.next()) {
+                emp_name = set.getString("emp_name");
+                emp_department = set.getString("emp_dept");
+                emp_password = set.getString("emp_password");
+                emp_ph = set.getString("emp_ph");
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+        }
+        System.out.println("\t\t Employee Details");
+        System.out.println("======================================================");
+
+        System.out.println("Employee ID :  "+emp_id);
+        System.out.println("Enployee Name :  "+emp_name);
+        System.out.println("Employee Department :  "+emp_department);
+        System.out.println("Employee Phone Number :  "+emp_ph);
+        System.out.println("Employee Password :  "+emp_password);
+        System.out.println("=======================================================");
+        _showMenu("main");
+    }
+
     private boolean _check_emp(String emp_id) {
 
         try {
@@ -133,12 +178,6 @@ public class Admin {
                 return false;
             }
             else {
-                while (set.next()){
-                    emp_name = set.getString("emp_name");
-                    emp_department = set.getString("emp_dept");
-                    emp_password = set.getString("emp_password");
-                    emp_ph = set.getString("emp_ph");
-                }
                 return true;
             }
         } catch (SQLException e) {
@@ -153,10 +192,11 @@ public class Admin {
             statement.executeUpdate(upd_query);
 
             if (upd_query.contains("UPDATE")) {
+                System.out.println();
                 System.out.println("Update Successful...");
                 _showMenu("update_emp");
             } else if (upd_query.contains("delete")) {
-                System.out.println("Removed Employee Successfully.... ");
+                System.out.println("Employee Removed Successfully.... ");
                 _showMenu("main");
             }
 
@@ -172,7 +212,7 @@ public class Admin {
 
 
         System.out.println("Create Employee");
-
+        System.out.println("======================================================");
         System.out.print("Enter Employee Name :  ");
         emp_name = scanner.nextLine();
 
@@ -182,6 +222,8 @@ public class Admin {
         System.out.print("Enter Employee Phone Number :  ");
         emp_ph = scanner.nextLine();
 
+        System.out.println("======================================================");
+        System.out.println();
         _validate("save");
 
 

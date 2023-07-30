@@ -24,7 +24,8 @@ public class Employee {
 
         System.out.println();
         System.out.println("Welcome to Employee page");
-
+        System.out.println("======================================================");
+        System.out.println();
 
         _show_EmpMenu("main");
     }
@@ -32,7 +33,8 @@ public class Employee {
 
     private void _show_EmpMenu(String menu) {
         if (menu.equals("main")) {
-            System.out.println("\tEnter login details ");
+            System.out.println("\t\t LOGIN ");
+            System.out.println("======================================================");
             System.out.print("Enter  Employee ID  :  ");
             emp_id = scanner.nextLine();
             System.out.print("Enter Employee Password :  ");
@@ -42,19 +44,23 @@ public class Employee {
         }
         else if (menu.equals("timesheet")) {
             System.out.println();
+            System.out.println("Employee Menu");
+            System.out.println("======================================================");
             System.out.println("1. Attendence");
             System.out.println("2. Apply for leave");
             System.out.println("3. Request Salary");
-            System.out.println("4.  Logout");
-
+            System.out.println("4. Logout");
+            System.out.println("======================================================");
             _decider("timesheet");
         }
         else if (menu.equals("attendence")) {
             System.out.println();
+            System.out.println("TimeSheet Menu");
+            System.out.println("======================================================");
             System.out.println("1. In");
             System.out.println("2. Out");
             System.out.println("3. Exit");
-
+            System.out.println("======================================================");
             _decider("attendence");
         }
     }
@@ -123,6 +129,7 @@ public class Employee {
                         ResultSet set = statement.executeQuery(f_out_query);
 
                         if (!set.next()) {
+                            System.out.println();
                             System.out.println("Employee not yet arrived");
                             _show_EmpMenu("attendence");
                         } else {
@@ -130,6 +137,7 @@ public class Employee {
 
                             String out_time = set.getString("emp_out");
                             if (!out_time.equals("0")) {
+                                System.out.println();
                                 System.out.println("Employee already went...");
                                 _show_EmpMenu("timesheet");
                             } else {
@@ -154,6 +162,7 @@ public class Employee {
                                     work = String.valueOf(hours);
                                 }
 
+                                System.out.println();
                                 System.out.println("You worked for " + work+" hours");
 
 
@@ -173,6 +182,7 @@ public class Employee {
                 case 3:
                     //TODO EXIT
                 default:
+                    System.out.println();
                     System.out.println("Enter valid option...");
                     _decider("attendence");
             }
