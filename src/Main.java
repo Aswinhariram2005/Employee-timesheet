@@ -74,11 +74,11 @@ public class Main {
 
     private static void _connDB() {
         String
-                DB_URL = "jdbc:mysql://localhost:3306/empdb";
+                DB_URL = "jdbc:mysql://localhost:3307/empdb";
 
 
         try {
-            conn = DriverManager.getConnection(DB_URL, "root", "Akshaya@2003");
+            conn = DriverManager.getConnection(DB_URL, "root", "aswin123");
             statement = conn.createStatement();
         } catch (SQLException e) {
             throw new RuntimeException(e);

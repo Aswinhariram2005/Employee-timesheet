@@ -88,6 +88,8 @@ public class Employee {
                     break;
                 case 4:
                     // REQ SALARY
+                    __req_salary();
+
                     break;
                 case 5:
                     //TODO EXIT
@@ -111,7 +113,7 @@ public class Employee {
                         ResultSet set = statement.executeQuery(f_in_query);
                         if (!set.next()) {
                             String in_query = "insert into empdb.timesheet(emp_id,date,day,emp_in,emp_out,total_hrs) values ('" + emp_id + "','" + today + "','" + day + "','" + time + "', '0' , '0'); ";
-                            _exe_query(in_query);
+                            _exe_query(in_query,"in");
                         } else {
                             System.out.println("Employee already arrived....");
                             _show_EmpMenu("timesheet");
@@ -166,7 +168,7 @@ public class Employee {
 
 
                                 String out_query = "update empdb.timesheet set emp_out = '" + time + "' ,  total_hrs = '" + work + "' where emp_id = '" + emp_id + "' and `date` = '" + today + "' ;";
-                                _exe_query(out_query);
+                                _exe_query(out_query, "out");
                             }
 
 
@@ -189,6 +191,62 @@ public class Employee {
         }
 
 
+    }
+
+    private void __req_salary() {
+        boolean first = false;
+        String ch_query = "select * from req_salary where emp_id = '"+emp_id+"' and date='"+today+"';";
+        try {
+            ResultSet set = statement.executeQuery(ch_query);
+            if (!set.next()){
+                first=true;
+            }
+            else {
+                System.out.println("Request already submitted...");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+      if (first){
+          System.out.println();
+          String reason="";
+
+          int earned = Integer.parseInt(_get_salary());
+          System.out.println("Amount Earned : "+earned);
+
+
+          System.out.print("Enter Amount Required : ");
+          int amount_req = scanner.nextInt();
+          scanner.nextLine();
+
+          if (amount_req>earned){
+              System.out.println("Enter Valid Amount....");
+              __req_salary();
+          }
+          else {
+              System.out.print("Enter Reason : ");
+              reason = scanner.nextLine();
+              String query = "Insert into req_salary (emp_id,date,day,amount_req,reason,status)" +
+                      "values ('"+emp_id+"','"+today+"','"+day+"','"+amount_req+"','"+reason+"','pending');";
+              _exe_query(query, "req");
+          }
+      }
+
+    }
+
+    private String _get_salary() {
+        String salary="";
+        String sal_query = "select total_salary from emp_details where emp_id = '"+emp_id+"' ;";
+        try {
+            ResultSet set = statement.executeQuery(sal_query);
+            if (set.next()){
+                salary = set.getString("total_salary");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return salary;
     }
 
     private void _check_status() {
@@ -222,8 +280,8 @@ public class Employee {
         day = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault());
     }
 
-    private void _exe_query(String query) {
-        if (query.contains("insert")) {
+    private void _exe_query(String query, String hint) {
+        if (hint.equals("in")) {
             try {
                 statement.executeUpdate(query);
                 System.out.println("Attendence In time updated successfully...");
@@ -231,13 +289,23 @@ public class Employee {
             } catch (Exception e) {
                 System.out.println(e);
             }
-        } else if (query.contains("update")) {
+        }
+        else if (hint.equals("out")) {
             try {
                 statement.executeUpdate(query);
                 System.out.println("Attendence Out time updated successfully...");
                 _update_salary();
                 _show_EmpMenu("timesheet");
             } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else if (hint.equals("req")) {
+            try {
+                statement.executeUpdate(query);
+                System.out.println("Salary request applied successfully....");
+                _show_EmpMenu("timesheet");
+            }
+            catch (Exception e){
                 System.out.println(e);
             }
         }
@@ -251,7 +319,7 @@ public class Employee {
                 int sal_hrs = Integer.parseInt(set.getString("salary_hrs"));
                 int salary = Integer.parseInt(work) * sal_hrs;
                 System.out.println("salary Earned Today = "+salary);
-                String sal_query = "update emp_details set hrs_worked = '"+work+"' ,total_salary= '"+String.valueOf(salary)+"' ;";
+                String sal_query = "update emp_details set hrs_worked = '"+work+"' ,total_salary = total_salary + '"+String.valueOf(salary)+"'  where emp_id = '"+emp_id+"' ;";
                 statement.executeUpdate(sal_query);
                 System.out.println("Salary Added Successfully");
 
