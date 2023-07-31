@@ -76,7 +76,8 @@ public class Manager {
                     _checkTimeSheet();
                     break;
                 case "2":
-                    //  TODO CHECK EMP_DETAILS
+                    //   CHECK EMP_DETAILS
+                    _showAllEmpDetails();
                     break;
                 case "3":
                     //  APPROVE LEAVE
@@ -126,6 +127,11 @@ public class Manager {
                     _decider("leave");
             }
         }
+    }
+
+    private void _showAllEmpDetails() {
+        String query = "select * from emp_details";
+        _execute_query(query,"emp",emp_id);
     }
 
     private void _approveSalary() {
@@ -336,6 +342,36 @@ public class Manager {
                     _showMenu("salary");
                 }
             } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+        else if (hint.equals("emp")){
+            try {
+                ResultSet set = statement.executeQuery(query);
+                if (!set.next()){
+                    System.out.println("No record found....");
+                    _showMenu("main");
+                }
+                else {
+                    System.out.println();
+                    System.out.println("Emp_ID Emp_Name Emp_Department Emp_Phone_Number Leave_permit Hours_worked Salary/Hr Salary_Earned");
+                    do {
+                        String
+                                emp_id = set.getString("emp_id"),
+                                emp_name = set.getString("emp_name"),
+                                emp_dept = set.getString("emp_dept"),
+                                emp_ph = set.getString("emp_ph"),
+                                leave_permit = set.getString("leave_permit"),
+                                hrs_worked = set.getString("hrs_worked"),
+                                salary_hrs = set.getString("salary_hrs"),
+                                total_salary = set.getString("total_salary");
+                        System.out.println(emp_id+" "+emp_name+" "+emp_dept+" "+emp_ph+" "+leave_permit+" "+hrs_worked+" "+salary_hrs+" "+total_salary);
+
+                    }while (set.next());
+                    _showMenu("main");
+                }
+            }
+            catch (Exception e){
                 System.out.println(e);
             }
         }

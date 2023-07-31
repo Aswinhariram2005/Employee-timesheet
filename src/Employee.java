@@ -121,8 +121,27 @@ public class Employee {
                     try {
                         ResultSet set = statement.executeQuery(f_in_query);
                         if (!set.next()) {
-                            String in_query = "insert into empdb.timesheet(emp_id,date,day,emp_in,emp_out,total_hrs) values ('" + emp_id + "','" + today + "','" + day + "','" + time + "', '0' , '0'); ";
-                            _exe_query(in_query, "in");
+                            String sal_ch_query = "select * from leavesheet where emp_id = '"+emp_id+"' and status = 'pending' and app_date ='"+today+"' ;";
+                            ResultSet set1 = statement.executeQuery(sal_ch_query);
+                            if (!set1.next()) {
+                                String in_query = "insert into empdb.timesheet(emp_id,date,day,emp_in,emp_out,total_hrs) values ('" + emp_id + "','" + today + "','" + day + "','" + time + "', '0' , '0'); ";
+                                _exe_query(in_query, "in");
+                            }
+                            else {
+                                scanner.nextLine();
+                                System.out.print("Do you want to cancel your leave request (Y/N): ");
+                                String ch = scanner.nextLine();
+
+                                if (ch.equals("Y")||ch.equals("y")){
+                                    String cancel_query = "update leavesheet set status = 'cancelled' where emp_id = '"+emp_id+"' and app_date='"+today+"';";
+                                    statement.executeUpdate(cancel_query);
+                                    String in_query = "insert into empdb.timesheet(emp_id,date,day,emp_in,emp_out,total_hrs) values ('" + emp_id + "','" + today + "','" + day + "','" + time + "', '0' , '0'); ";
+                                    _exe_query(in_query, "in");
+                                }
+                                else{
+                                    _show_EmpMenu("timesheet");
+                                }
+                            }
                         } else {
                             System.out.println("Employee already arrived....");
                             _show_EmpMenu("timesheet");
@@ -222,7 +241,7 @@ public class Employee {
 
     private void __req_salary() {
         boolean first = false;
-        String ch_query = "select * from req_salary where emp_id = '" + emp_id + "' and date='" + today + "';";
+        String ch_query = "select * from req_salary where emp_id = '" + emp_id + "' and date='" + today + "' and status = 'pending' ;";
         try {
             ResultSet set = statement.executeQuery(ch_query);
             if (!set.next()) {
