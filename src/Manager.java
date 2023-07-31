@@ -139,8 +139,8 @@ public class Manager {
             while (set.next()){
                 amount_req = Integer.parseInt(set.getString("amount_req"));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
         System.out.print("Do you want to grant (Y/N) : ");
@@ -154,6 +154,17 @@ public class Manager {
                 String query = "update req_salary set status = 'granted' where emp_id= '"+id+"' and date = '"+today+"' ;";
                 statement.executeUpdate(query);
                 System.out.println("Request approved successfully...");
+                _showMenu("main");
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+        else{
+            //REJECTED
+            String query = "update req_salary set status = 'rejected' where emp_id= '"+id+"' and date = '"+today+"' ;";
+            try {
+                statement.executeUpdate(query);
+                System.out.println("Request rejected successfully...");
                 _showMenu("main");
             } catch (Exception e) {
                 System.out.println(e);
