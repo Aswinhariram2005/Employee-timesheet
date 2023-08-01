@@ -20,18 +20,18 @@ public class Employee {
     private String day, today, time;
     private String work;
 
-    public Employee(Statement statement, Employee_interface employee_interface) {
+
+    public void setStatement(Statement statement) {
         this.statement = statement;
-        this.employee_interface = employee_interface;
-        _date();
-        System.out.println();
-
-
-        _show_EmpMenu("main");
     }
 
+    public void setEmployee_interface(Employee_interface employee_interface) {
+        this.employee_interface = employee_interface;
+    }
 
-    private  void _show_EmpMenu(String menu) {
+    public   void _show_EmpMenu(String menu) {
+        _date();
+        System.out.println();
         if (menu.equals("main")) {
 
             System.out.println("======================================================");

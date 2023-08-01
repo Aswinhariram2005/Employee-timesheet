@@ -54,33 +54,46 @@ public class Main {
         {
             case ADMIN:
                 // ADMIN
-                Admin admin = new Admin(statement,new Admin.Admin_interface() {
+                Admin admin = new Admin();
+
+
+                admin.setStatement(statement);
+                admin.setAdmin_interface(new Admin.Admin_interface() {
                     @Override
                     public void _Logout_main() {
                         _show_userMenu();
                     }
                 });
+                admin._showMenu("main");
 
 
 
                 break;
             case MANAGER:
                 // MANAGER
-                Manager manager = new Manager(statement, new Manager.Manager_interface() {
+                Manager manager = new Manager();
+
+                manager.setStatement(statement);
+                manager.setManager_interface(new Manager.Manager_interface() {
                     @Override
                     public void logout() {
                         _show_userMenu();
                     }
                 });
+
+                manager._Login();
                 break;
             case EMPLOYEE:
                 // EMPLOYEE
-                Employee employee = new Employee(statement, new Employee.Employee_interface() {
+                Employee employee = new Employee();
+                employee.setStatement(statement);
+                employee.setEmployee_interface(new Employee.Employee_interface() {
                     @Override
                     public void logout() {
                         _show_userMenu();
                     }
                 });
+                employee._show_EmpMenu("main");
 
                 break;
             default:
@@ -97,10 +110,10 @@ public class Main {
 
     private static void _connDB() {
         String
-                DB_URL = "jdbc:mysql://localhost:3306/empdb";
+                DB_URL = "jdbc:mysql://localhost:3307/empdb";
 
         try {
-            conn = DriverManager.getConnection(DB_URL, "root", "Akshaya@2003");
+            conn = DriverManager.getConnection(DB_URL, "root", "aswin123");
             statement = conn.createStatement();
         } catch (SQLException e) {
             System.out.println(e);

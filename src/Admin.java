@@ -16,12 +16,13 @@ public class Admin {
     String today,day,time;
 
 
-    public Admin(Statement statement,Admin_interface admin_interface) {
-        this.admin_interface = admin_interface;
+    public void setStatement(Statement statement) {
         this.statement = statement;
-        _showMenu("main");
     }
 
+    public void setAdmin_interface(Admin_interface admin_interface) {
+        this.admin_interface = admin_interface;
+    }
 
     private void _date() {
         java.util.Date date = new Date();

@@ -17,17 +17,18 @@ public class Manager extends Actions {
     private Manager_interface manager_interface;
     private String today, time, day;
 
-    public Manager(Statement statement, Manager_interface manager_interface) {
+
+
+    public void setStatement(Statement statement) {
         this.statement = statement;
-        this.manager_interface = manager_interface;
-        _date();
-        _Login();
     }
 
+    public void setManager_interface(Manager_interface manager_interface) {
+        this.manager_interface = manager_interface;
+    }
 
-
-
-    private void _Login() {
+    public void _Login() {
+        _date();
         System.out.println();
         System.out.println("======================================================");
         System.out.println("\t\t\t\tMANAGER LOGIN");
