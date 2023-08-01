@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class Manager {
+public class Manager extends Actions {
 
     private Scanner scanner = new Scanner(System.in);
     private String emp_id, emp_pass;
@@ -25,38 +25,6 @@ public class Manager {
     }
 
 
-    private void _showMenu(String hint) {
-        if (hint.equals("main")) {
-            System.out.println();
-            System.out.println("Welcome to Manager Page");
-            System.out.println("======================================================");
-            System.out.println("\t\t\tManager Menu");
-            System.out.println("1. Check Timesheet");
-            System.out.println("2. Employee Details");
-            System.out.println("3. Check Leave Request");
-            System.out.println("4. Check Salary Request");
-            System.out.println("5. Logout");
-            System.out.println("======================================================");
-            System.out.println();
-            _decider("main");
-        } else if (hint.equals("leave")) {
-            System.out.println();
-            System.out.println("======================================================");
-            System.out.println("\t\t\t Request Action");
-            System.out.println("1.Select Request");
-            System.out.println("2.Exit");
-            System.out.println("======================================================");
-            System.out.println();
-            _decider("leave");
-        }
-        else if (hint.equals("salary")) {
-            System.out.println();
-            System.out.println("1.Select Request");
-            System.out.println("2.Exit");
-            System.out.println();
-            _decider("salary");
-        }
-    }
 
 
     private void _Login() {
@@ -74,71 +42,6 @@ public class Manager {
     }
 
 
-    private void _decider(String hint) {
-
-        System.out.print("Enter your option : ");
-        String choice = scanner.nextLine();
-        System.out.println();
-
-        if (hint.equals("main")) {
-            switch (choice) {
-                case "1":
-                    //  CHECK TIME SHEET
-                    _checkTimeSheet();
-                    break;
-                case "2":
-                    //   CHECK EMP_DETAILS
-                    _showAllEmpDetails();
-                    break;
-                case "3":
-                    //  APPROVE LEAVE
-                    _showAllLeaveRequest();
-                    break;
-                case "4":
-                    //  APPROVE SALARY
-                    _showAllSalaryRequest();
-                    break;
-                case "5":
-                    // LOGOUT
-                    System.out.println("Logout Successful...");
-                    manager_interface.logout();
-                    break;
-                default:
-                    System.out.println("Enter valid option....");
-                    _showMenu("main");
-            }
-        } else if (hint.equals("leave")) {
-            switch (choice) {
-                case "1":
-                    //SELECT REQUEST
-                    _approveLeave();
-                    break;
-                case "2":
-                    // EXIT
-                    _showMenu("main");
-                    break;
-                default:
-                    System.out.println("Enter valid option...");
-                    _decider("leave");
-            }
-        }
-        else if (hint.equals("salary")) {
-            switch (choice) {
-                case "1":
-                    //SELECT REQUEST
-
-                    _approveSalary();
-                    break;
-                case "2":
-                    // EXIT
-                    _showMenu("main");
-                    break;
-                default:
-                    System.out.println("Enter valid option...");
-                    _decider("leave");
-            }
-        }
-    }
 
 
     private void _showAllEmpDetails() {
@@ -427,6 +330,113 @@ public class Manager {
             _exit();
         }
     }
+
+    @Override
+    public void _showMenu(String hint) {
+        {
+            if (hint.equals("main")) {
+                System.out.println();
+                System.out.println("Welcome to Manager Page");
+                System.out.println("======================================================");
+                System.out.println("\t\t\tManager Menu");
+                System.out.println("1. Check Timesheet");
+                System.out.println("2. Employee Details");
+                System.out.println("3. Check Leave Request");
+                System.out.println("4. Check Salary Request");
+                System.out.println("5. Logout");
+                System.out.println("======================================================");
+                System.out.println();
+                _decider("main");
+            } else if (hint.equals("leave")) {
+                System.out.println();
+                System.out.println("======================================================");
+                System.out.println("\t\t\t Request Action");
+                System.out.println("1.Select Request");
+                System.out.println("2.Exit");
+                System.out.println("======================================================");
+                System.out.println();
+                _decider("leave");
+            }
+            else if (hint.equals("salary")) {
+                System.out.println();
+                System.out.println("1.Select Request");
+                System.out.println("2.Exit");
+                System.out.println();
+                _decider("salary");
+            }
+        }
+
+
+    }
+
+
+    @Override
+    public void _decider(String hint) {
+
+        System.out.print("Enter your option : ");
+        String choice = scanner.nextLine();
+        System.out.println();
+
+        if (hint.equals("main")) {
+            switch (choice) {
+                case "1":
+                    //  CHECK TIME SHEET
+                    _checkTimeSheet();
+                    break;
+                case "2":
+                    //   CHECK EMP_DETAILS
+                    _showAllEmpDetails();
+                    break;
+                case "3":
+                    //  APPROVE LEAVE
+                    _showAllLeaveRequest();
+                    break;
+                case "4":
+                    //  APPROVE SALARY
+                    _showAllSalaryRequest();
+                    break;
+                case "5":
+                    // LOGOUT
+                    System.out.println("Logout Successful...");
+                    manager_interface.logout();
+                    break;
+                default:
+                    System.out.println("Enter valid option....");
+                    _showMenu("main");
+            }
+        } else if (hint.equals("leave")) {
+            switch (choice) {
+                case "1":
+                    //SELECT REQUEST
+                    _approveLeave();
+                    break;
+                case "2":
+                    // EXIT
+                    _showMenu("main");
+                    break;
+                default:
+                    System.out.println("Enter valid option...");
+                    _decider("leave");
+            }
+        }
+        else if (hint.equals("salary")) {
+            switch (choice) {
+                case "1":
+                    //SELECT REQUEST
+
+                    _approveSalary();
+                    break;
+                case "2":
+                    // EXIT
+                    _showMenu("main");
+                    break;
+                default:
+                    System.out.println("Enter valid option...");
+                    _decider("leave");
+            }
+        }
+    }
+
 
 
     interface Manager_interface {

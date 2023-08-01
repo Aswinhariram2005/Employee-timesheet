@@ -31,7 +31,7 @@ public class Employee {
     }
 
 
-    private void _show_EmpMenu(String menu) {
+    private  void _show_EmpMenu(String menu) {
         if (menu.equals("main")) {
 
             System.out.println("======================================================");
