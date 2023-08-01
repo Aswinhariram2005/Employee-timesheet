@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
+
 public class Admin {
     private Scanner scanner = new Scanner(System.in);
     private String emp_name, emp_department, emp_password, c_password, emp_ph, emp_id,emp_salary,salary_hrs,total_salary,leave_permit,hrs_worked;
@@ -21,54 +22,7 @@ public class Admin {
         _showMenu("main");
     }
 
-    public void _showMenu(String menu) {
 
-        _date();
-        _update_day1();
-
-        if (menu.equals("main")) {
-            System.out.println();
-            System.out.println("Welcome to Admin page");
-            System.out.println("======================================================");
-            System.out.println("\t\t\tAdmin Menu...");
-            System.out.println("1. Add new Employee");
-            System.out.println("2. Update Existing Employee");
-            System.out.println("3. Remove Employee");
-            System.out.println("4. View Employee Details");
-            System.out.println("5. Logout");
-            System.out.println("======================================================");
-            System.out.println();
-            _decider("main");
-        } else if (menu.equals("update_emp")) {
-            System.out.println();
-
-            System.out.println("======================================================");
-            System.out.println("Update Employee Details");
-            System.out.println("1. Employee Name");
-            System.out.println("2. Employee Department");
-            System.out.println("3. Employee Phone Number");
-            System.out.println("4. Employee Password");
-            System.out.println("5. Cancel Update");
-            System.out.println("======================================================");
-            System.out.println();
-
-            _decider("update_emp");
-        }
-    }
-
-    private void _update_day1() {
-        String date = today.substring(0,2);
-        if (date.equals("01")){
-
-            String day1_query = "update emp_details set leave_permit = 3 , leave_update = '"+today+"' where leave_update != '"+today+"' ;";
-            try {
-                statement.executeUpdate(day1_query);
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-        }
-
-    }
     private void _date() {
         java.util.Date date = new Date();
         SimpleDateFormat date_formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -83,7 +37,63 @@ public class Admin {
     }
 
 
+    private void _update_day1() {
+        String date = today.substring(0,2);
+        if (date.equals("01")){
+
+            String day1_query = "update emp_details set leave_permit = 3 , leave_update = '"+today+"' where leave_update != '"+today+"' ;";
+            try {
+                statement.executeUpdate(day1_query);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+
+    }
+
+
+    public void _showMenu(String menu) {
+
+        _date();
+        _update_day1();
+
+        if (menu.equals("main")) {
+            System.out.println();
+            System.out.println("Welcome to Admin page");
+            System.out.println("======================================================");
+            System.out.println("\t\t\tAdmin Menu");
+            System.out.println("1. Add new Employee");
+            System.out.println("2. Update Existing Employee");
+            System.out.println("3. Remove Employee");
+            System.out.println("4. View Employee Details");
+            System.out.println("5. Logout");
+            System.out.println("======================================================");
+            System.out.println();
+            _decider("main");
+        }
+        else if (menu.equals("update_emp")) {
+            System.out.println();
+            System.out.println("======================================================");
+            System.out.println("\t\t\tUpdate Employee Details");
+            System.out.println("1. Employee Name");
+            System.out.println("2. Employee Department");
+            System.out.println("3. Employee Phone Number");
+            System.out.println("4. Employee Password");
+            System.out.println("5. Employee Leave Limit");
+            System.out.println("6. Salary Per Hour");
+            System.out.println("7. Cancel Update");
+            System.out.println("======================================================");
+            System.out.println();
+            _decider("update_emp");
+        }
+
+
+    }
+
+
     public void _decider(String decider) {
+
+
         System.out.print("Enter you option : ");
         int choice = scanner.nextInt();
         System.out.println();
@@ -135,7 +145,8 @@ public class Admin {
                     System.out.println("Enter valid choice...");
                     _decider("main");
             }
-        } else if (decider.equals("update_emp")) {
+        }
+        else if (decider.equals("update_emp")) {
 
             String upd_query;
             scanner.nextLine();
@@ -168,6 +179,20 @@ public class Admin {
 
                     break;
                 case 5:
+                    // LEAVE LIMIT
+                    System.out.print("Enter new Employee Leave Limit: ");
+                    leave_permit = scanner.nextLine();
+                    upd_query = "UPDATE emp_details SET leave_permit = '" + leave_permit + "' where emp_id='"+emp_id+"' ;";
+                    _update_emp(upd_query);
+                    break;
+                case 6:
+                    // SALARY PER HOUR
+                    System.out.print("Enter new Salary Per hour: ");
+                    salary_hrs = scanner.nextLine();
+                    upd_query = "UPDATE emp_details SET salary_hrs = '" + salary_hrs + "' where emp_id='"+emp_id+"' ;";
+                    _update_emp(upd_query);
+                    break;
+                case 7:
                     //EXIT
                     _showMenu("main");
                     break;
@@ -176,9 +201,14 @@ public class Admin {
                     _decider("update_emp");
             }
         }
+
+
     }
 
+
     private void _view_emp(String empId) {
+
+
         System.out.println();
         try {
             ResultSet set = statement.executeQuery("select  *  from empdb.emp_details  where emp_id='" + emp_id + "';");
@@ -199,7 +229,6 @@ public class Admin {
         }
         System.out.println("\t\t Employee Details");
         System.out.println("======================================================");
-
         System.out.println("Employee ID :  "+emp_id);
         System.out.println("Enployee Name :  "+emp_name);
         System.out.println("Employee Department :  "+emp_department);
@@ -208,10 +237,13 @@ public class Admin {
         System.out.println("Employee Leave Days Limit :  "+leave_permit);
         System.out.println("Employee Salary Per Hour :  "+salary_hrs);
         System.out.println("Employee Worked : "+ hrs_worked+" hours");
-        System.out.println("Employee Total Salary :  "+total_salary  );
+        System.out.println("Employee Total Salary :  $ "+total_salary  );
         System.out.println("=======================================================");
         _showMenu("main");
+
+
     }
+
 
     private boolean _check_emp(String emp_id) {
 
@@ -231,6 +263,7 @@ public class Admin {
 
 
     }
+
 
     private void _update_emp(String upd_query) {
         try {
@@ -257,7 +290,7 @@ public class Admin {
 
 
         System.out.println("======================================================");
-        System.out.println("\t\t\tCreate Employee...");
+        System.out.println("\t\t\tCreate Employee");
         System.out.print("Enter Employee Name :  ");
         emp_name = scanner.nextLine();
 
@@ -273,6 +306,7 @@ public class Admin {
 
 
     }
+
 
     private void _validate(String menu) {
 
@@ -300,6 +334,7 @@ public class Admin {
         }
     }
 
+
     public void _saveDB() {
 
 
@@ -319,6 +354,7 @@ public class Admin {
         }
     }
 
+
     private void _get_emp_id() {
         try {
             String id_query = "select emp_id from emp_details where emp_ph='" + emp_ph + "" + "';";
@@ -333,7 +369,8 @@ public class Admin {
         }
     }
 
-   interface Admin_interface{
+
+    interface Admin_interface{
         void _Logout_main();
    }
 }

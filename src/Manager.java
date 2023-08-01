@@ -24,21 +24,28 @@ public class Manager {
         _Login();
     }
 
+
     private void _showMenu(String hint) {
         if (hint.equals("main")) {
             System.out.println();
             System.out.println("Welcome to Manager Page");
+            System.out.println("======================================================");
+            System.out.println("\t\t\tManager Menu");
             System.out.println("1. Check Timesheet");
             System.out.println("2. Employee Details");
             System.out.println("3. Check Leave Request");
             System.out.println("4. Check Salary Request");
             System.out.println("5. Logout");
+            System.out.println("======================================================");
             System.out.println();
             _decider("main");
         } else if (hint.equals("leave")) {
             System.out.println();
+            System.out.println("======================================================");
+            System.out.println("\t\t\t Request Action");
             System.out.println("1.Select Request");
             System.out.println("2.Exit");
+            System.out.println("======================================================");
             System.out.println();
             _decider("leave");
         }
@@ -51,13 +58,16 @@ public class Manager {
         }
     }
 
+
     private void _Login() {
         System.out.println();
+        System.out.println("======================================================");
+        System.out.println("\t\t\t\tMANAGER LOGIN");
         System.out.print("Enter Employee id : ");
         emp_id = scanner.nextLine();
         System.out.print("Enter Password : ");
         emp_pass = scanner.nextLine();
-
+        System.out.println("======================================================");
         String query = "select * from emp_details where emp_id = '" + emp_id + "' and emp_password = '" + emp_pass + "'; ";
         _execute_query(query, "login", emp_id);
 
@@ -68,6 +78,7 @@ public class Manager {
 
         System.out.print("Enter your option : ");
         String choice = scanner.nextLine();
+        System.out.println();
 
         if (hint.equals("main")) {
             switch (choice) {
@@ -129,10 +140,12 @@ public class Manager {
         }
     }
 
+
     private void _showAllEmpDetails() {
         String query = "select * from emp_details";
         _execute_query(query,"emp",emp_id);
     }
+
 
     private void _approveSalary() {
         System.out.println();
@@ -181,10 +194,12 @@ public class Manager {
 
     }
 
+
     private void _showAllSalaryRequest() {
         String query = "select * from req_salary where status = 'pending' and date = '" + today + "' ;";
         _execute_query(query,"salary",emp_id);
     }
+
 
     private void _approveLeave() {
         System.out.print("Choose ID : ");
@@ -216,16 +231,19 @@ public class Manager {
         }
     }
 
+
     private void _showAllLeaveRequest() {
         String query = "select * from leavesheet where status = 'pending' and app_date = '" + today + "' ;";
         _execute_query(query, "leavesheet", emp_id);
 
     }
 
+
     private void _checkTimeSheet() {
         String query = "select * from timesheet";
         _execute_query(query, "timesheet", emp_id);
     }
+
 
     private void _execute_query(String query, String hint, String id) {
         if (hint.equals("login")) {
@@ -251,8 +269,8 @@ public class Manager {
         else if (hint.equals("timesheet")) {
             try {
                 ResultSet set = statement.executeQuery(query);
-
-                System.out.println("Emp_id date day IN OUT Total_Hours");
+                System.out.println("======================================================");
+                System.out.println("Emp_id     date       day       IN     OUT    Total_Hours");
                 while (set.next()) {
                     String
                             emp_id = set.getString("emp_id"),
@@ -261,8 +279,9 @@ public class Manager {
                             emp_in = set.getString("emp_in"),
                             emp_out = set.getString("emp_out"),
                             total_hrs = set.getString("total_hrs");
-                    System.out.println(emp_id + " " + date + " " + emp_in + " " + emp_out + " " + total_hrs);
+                    System.out.println("  "+emp_id + " \t" + date + "   " +day+" "+ emp_in + "    " + emp_out + "     " + total_hrs);
                 }
+                System.out.println("======================================================");
                 _exit();
             } catch (Exception e) {
                 System.out.println(e);
@@ -280,7 +299,7 @@ public class Manager {
                     _showMenu("main");
                 }
                 else {
-
+                    System.out.println("======================================================");
                     System.out.println("Emp_ID Application_Date Application_Day Reason Status");
                     do {
                         String
@@ -292,6 +311,7 @@ public class Manager {
                         System.out.println(emp_id + " " + date + " " + day + " " + reason + " " + status);
                     }
                     while (set.next()) ;
+                    System.out.println("======================================================");
                     System.out.println();
                     _showMenu("leave");
                 }
@@ -327,6 +347,7 @@ public class Manager {
                 }
                 else {
                     System.out.println();
+                    System.out.println("======================================================");
                     System.out.println("Emp_id Application_Date Application_Day Amount_Requested Reason Status");
                     do {
                         String
@@ -339,6 +360,7 @@ public class Manager {
                         System.out.println(emp_id+" " +app_date+" "+app_day+" "+amount_req+" " +reason+" "+status);
 
                     }while (set.next());
+                    System.out.println("======================================================");
                     _showMenu("salary");
                 }
             } catch (Exception e) {
@@ -354,6 +376,7 @@ public class Manager {
                 }
                 else {
                     System.out.println();
+                    System.out.println("======================================================");
                     System.out.println("Emp_ID Emp_Name Emp_Department Emp_Phone_Number Leave_permit Hours_worked Salary/Hr Salary_Earned");
                     do {
                         String
@@ -368,6 +391,7 @@ public class Manager {
                         System.out.println(emp_id+" "+emp_name+" "+emp_dept+" "+emp_ph+" "+leave_permit+" "+hrs_worked+" "+salary_hrs+" "+total_salary);
 
                     }while (set.next());
+                    System.out.println("======================================================");
                     _showMenu("main");
                 }
             }
@@ -376,6 +400,7 @@ public class Manager {
             }
         }
     }
+
 
     private void _date() {
         Date date = new Date();
@@ -390,9 +415,10 @@ public class Manager {
         day = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault());
     }
 
+
     private void _exit() {
         System.out.println();
-        System.out.print("Do you want to exit press (Y/y): ");
+        System.out.print("Do you want to exit press (Y/N): ");
         String choice = scanner.nextLine();
         if (choice.equals("Y") || choice.equals("y")) {
             _showMenu("main");
@@ -401,6 +427,7 @@ public class Manager {
             _exit();
         }
     }
+
 
     interface Manager_interface {
         void logout();

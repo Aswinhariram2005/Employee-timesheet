@@ -25,8 +25,7 @@ public class Employee {
         this.employee_interface = employee_interface;
         _date();
         System.out.println();
-        System.out.println("Welcome to Employee page");
-        System.out.println();
+
 
         _show_EmpMenu("main");
     }
@@ -36,17 +35,21 @@ public class Employee {
         if (menu.equals("main")) {
 
             System.out.println("======================================================");
-            System.out.println("\t\t\t\tLOGIN ");
+            System.out.println("\t\t\t\tEMPLOYEE LOGIN ");
             System.out.print("Enter  Employee ID  :  ");
             emp_id = scanner.nextLine();
             System.out.print("Enter Employee Password :  ");
             emp_password = scanner.nextLine();
+            System.out.println("======================================================");
+            System.out.println();
 
             _check_Emp("details");
-        } else if (menu.equals("timesheet")) {
+        }
+        else if (menu.equals("timesheet")) {
             System.out.println();
+            System.out.println("Welcome to Employee page");
             System.out.println("======================================================");
-            System.out.println("\t\t\tEmployee Menu...");
+            System.out.println("\t\t\tEmployee Menu");
             System.out.println("1. Attendence");
             System.out.println("2. Apply for Leave");
             System.out.println("3. Check Leave Application Status");
@@ -55,10 +58,11 @@ public class Employee {
             System.out.println("6. Logout");
             System.out.println("======================================================");
             _decider("timesheet");
-        } else if (menu.equals("attendence")) {
+        }
+        else if (menu.equals("attendence")) {
             System.out.println();
-            System.out.println("TimeSheet Menu");
             System.out.println("======================================================");
+            System.out.println("TimeSheet Menu");
             System.out.println("1. In");
             System.out.println("2. Out");
             System.out.println("3. Exit");
@@ -66,6 +70,7 @@ public class Employee {
             _decider("attendence");
         }
     }
+
 
     private void _decider(String menu) {
         System.out.println();
@@ -221,6 +226,7 @@ public class Employee {
 
     }
 
+
     private void _salary_reqStatus() {
         String check_query =  "select * from req_salary where emp_id = '" + emp_id + "' and date='" + today + "';";
         try {
@@ -238,6 +244,7 @@ public class Employee {
             System.out.println(e);
         }
     }
+
 
     private void __req_salary() {
         boolean first = false;
@@ -280,6 +287,7 @@ public class Employee {
 
     }
 
+
     private String _get_salary() {
         String salary = "";
         String sal_query = "select total_salary from emp_details where emp_id = '" + emp_id + "' ;";
@@ -293,6 +301,7 @@ public class Employee {
         }
         return salary;
     }
+
 
     private void _check_status() {
         String leave_check_query = "select * from leavesheet where emp_id = '" + emp_id + "' and app_date+ '" + today + "' ;";
@@ -311,6 +320,7 @@ public class Employee {
         }
     }
 
+
     private void _date() {
         Date date = new Date();
         SimpleDateFormat date_formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -323,6 +333,7 @@ public class Employee {
         time = time_formatter.format(date);
         day = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault());
     }
+
 
     private void _exe_query(String query, String hint) {
         if (hint.equals("in")) {
@@ -353,6 +364,7 @@ public class Employee {
         }
     }
 
+
     private void _update_salary() {
         String sal_hrs_query = "select salary_hrs from emp_details where emp_id = '" + emp_id + "' ;";
         try {
@@ -372,6 +384,7 @@ public class Employee {
 
 
     }
+
 
     private void _check_Emp(String ch) {
         if (ch.equals("details")) {
@@ -419,6 +432,7 @@ public class Employee {
         }
     }
 
+
     private void _applyLeave() {
         System.out.println();
         scanner.nextLine();
@@ -436,6 +450,7 @@ public class Employee {
         }
 
     }
+
 
     interface Employee_interface {
         void logout();

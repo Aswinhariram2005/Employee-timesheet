@@ -4,9 +4,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+
+enum Role
+{
+    ADMIN,
+    MANAGER,
+    EMPLOYEE,
+    DEFAULT
+}
+
 public class Main {
 
-    // success if you see this yes!!!!
     private  static Scanner scanner = new Scanner(System.in);
     private static Statement statement;
     private static Connection conn;
@@ -19,25 +27,32 @@ public class Main {
        _show_userMenu();
     }
 
-    private static void _show_userMenu() {
 
-        System.out.println("======================================================");
-        System.out.println("\t\t\t Choose User...");
-        System.out.println("1.Admin");
-        System.out.println("2.Manager");
-        System.out.println("3.Employee");
-        System.out.println("======================================================");
-        System.out.println();
-        _Main();
-
-    }
 
     private static void _Main() {
         _connDB();
         System.out.print("Select you position : ");
         int choice = scanner.nextInt();
-        switch (choice){
-            case 1:
+        Role role = Role.DEFAULT;
+        if(choice==1)
+        {
+            role=Role.ADMIN;
+        }
+        else if (choice==2)
+        {
+            role=Role.MANAGER;
+        }
+        else  if (choice==3)
+        {
+            role=Role.EMPLOYEE;
+        }
+        else
+        {
+            role=Role.DEFAULT;
+        }
+        switch (role)
+        {
+            case ADMIN:
                 // ADMIN
                 Admin admin = new Admin(statement,new Admin.Admin_interface() {
                     @Override
@@ -49,7 +64,7 @@ public class Main {
 
 
                 break;
-            case 2:
+            case MANAGER:
                 // MANAGER
                 Manager manager = new Manager(statement, new Manager.Manager_interface() {
                     @Override
@@ -58,7 +73,7 @@ public class Main {
                     }
                 });
                 break;
-            case 3:
+            case EMPLOYEE:
                 // EMPLOYEE
                 Employee employee = new Employee(statement, new Employee.Employee_interface() {
                     @Override
@@ -70,6 +85,7 @@ public class Main {
                 break;
             default:
                 System.out.println("Enter valid details...");
+                System.out.println();
                 _Main();
 
         }
@@ -78,17 +94,33 @@ public class Main {
     }
 
 
+
     private static void _connDB() {
         String
-                DB_URL = "jdbc:mysql://localhost:3307/empdb";
-
+                DB_URL = "jdbc:mysql://localhost:3306/empdb";
 
         try {
-            conn = DriverManager.getConnection(DB_URL, "root", "aswin123");
+            conn = DriverManager.getConnection(DB_URL, "root", "Akshaya@2003");
             statement = conn.createStatement();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
+    }
+
+
+
+    private static void _show_userMenu() {
+
+        System.out.println("======================================================");
+        System.out.println("\t\t\t Choose User");
+        System.out.println("1.Admin");
+        System.out.println("2.Manager");
+        System.out.println("3.Employee");
+        System.out.println("======================================================");
+        System.out.println();
+        _Main();
 
     }
+
+
 }
